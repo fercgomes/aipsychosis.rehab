@@ -22,11 +22,16 @@ function Icon({ name, ...props }) {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}><path d={paths[name]} /></svg>;
 }
 
-function Hand({ cursorRef }) {
-  return <div ref={cursorRef} className="hand" aria-hidden="true"><svg viewBox="0 0 100 130" fill="none">
+function TouchCursor({ cursorRef, tool }) {
+  return <div ref={cursorRef} className={`touch-cursor ${tool}`} aria-hidden="true"><svg viewBox="0 0 100 130" fill="none">
     <defs><linearGradient id="skin" x1="15" y1="20" x2="90" y2="110" gradientUnits="userSpaceOnUse"><stop stopColor="#ffedca"/><stop offset="1" stopColor="#d6a172"/></linearGradient></defs>
+    {tool === 'foot' ? <>
+      <path d="M35 122c-9-5-9-18-5-30 4-13-2-22-8-35-4-9-8-21-6-34 1-10 5-16 12-15 9 1 10 10 9 22l2-13c2-9 12-10 15-2l1 17 3-12c3-8 12-5 13 2l-1 15 4-9c4-6 12-2 11 5l-4 13 5-5c5-4 11 2 8 8L81 67c-8 10-15 16-16 27-1 9 3 18-2 26-5 9-20 11-28 2Z" fill="url(#skin)" stroke="#ae805c" strokeWidth="1.3" />
+      <path d="M21 22c3-3 8-3 11 0M43 19l6 1M61 25l5 2M76 34l4 2M85 44l4 2M28 48c12-8 28-7 43 1M40 73c7 3 13 3 19 0M36 110c6 5 15 5 21 0" stroke="#b78560" strokeOpacity=".55" strokeWidth="1.3" strokeLinecap="round" />
+    </> : <>
     <path d="M35 123c-1-14-8-24-16-35L5 67c-6-10 3-17 10-10l16 17-9-49c-2-11 11-14 14-3l8 34-2-44c0-12 13-13 14-1l3 43 6-37c2-11 14-8 12 3l-4 39 9-24c4-10 15-5 11 5L82 80c-3 13-12 27-10 43" fill="url(#skin)" stroke="#ae805c" strokeWidth="1.3"/>
     <path d="M33 77c11-3 23 4 24 15M46 69l12 3M65 71l9-1M28 34l8-2M45 27h10M64 33l10 2M80 48l8 3M36 106c9 3 18 4 30 1" stroke="#b78560" strokeOpacity=".55" strokeWidth="1.3" strokeLinecap="round"/>
+    </>}
   </svg></div>;
 }
 
@@ -40,8 +45,9 @@ function App() {
   const [touched, setTouched] = useState(false);
   const [error, setError] = useState(false);
   const [soundError, setSoundError] = useState(false);
-  const settings = useRef({ wind, paused, sound });
-  settings.current = { wind, paused, sound };
+  const [tool, setTool] = useState('hand');
+  const settings = useRef({ wind, paused, sound, tool });
+  settings.current = { wind, paused, sound, tool };
 
   useEffect(() => {
     let dispose;
@@ -123,7 +129,7 @@ function App() {
 
   return <main>
     <canvas ref={canvas} className="meadow" tabIndex={error ? -1 : 0} aria-label="Interactive grass field" aria-describedby="instructions" />
-    <Hand cursorRef={cursor} />
+    <TouchCursor cursorRef={cursor} tool={tool} />
     <header className="masthead"><a className="wordmark" href="/" aria-label="aipsychosis.rehab home"><Icon name="grass" />aipsychosis.rehab</a><span className="availability"><i />Nothing needs you right now.</span></header>
     <section className="intro" aria-label="Welcome to the meadow">
       <h1>Touch grass.</h1>
@@ -132,14 +138,23 @@ function App() {
     {error && <div className="error" role="alert"><h2>The meadow couldn’t open.</h2><p>This scene needs WebGL 2. Try a browser with hardware acceleration enabled.</p><button onClick={() => window.location.reload()}>Try again</button></div>}
     <footer className="footer">
       <div className="invitation" aria-live="polite"><span className="little-line" /><p>{touched ? 'There you go. Stay a while.' : 'A little less prompting. A little more being.'}</p><span className="little-line" /></div>
-      <div className="controls" aria-label="Meadow controls">
+      <div className="control-bar">
+        <fieldset className="tool-switcher">
+          <legend className="sr-only">Touch grass with</legend>
+          {['hand', 'foot'].map(value => <label key={value}>
+            <input className="sr-only" type="radio" name="touch-tool" value={value} checked={tool === value} onChange={() => setTool(value)} />
+            <span>{value === 'hand' ? 'Hand' : 'Foot'}</span>
+          </label>)}
+        </fieldset>
+        <div className="controls" aria-label="Meadow controls">
         <button className="sound-button" onClick={toggleSound} aria-pressed={sound} aria-label={sound ? 'Turn sound off' : 'Turn sound on'}><Icon name={sound ? 'sound' : 'mute'} /><span>Sound {sound ? 'on' : 'off'}</span></button>
         <span className="separator" />
         <label className="wind-control"><Icon name="wind" /><span>Breeze</span><input aria-label="Breeze strength" type="range" min="0" max="1.8" step="0.05" value={wind} onChange={event => setWind(Number(event.target.value))} /></label>
         <span className="separator" />
         <button className="pause-button" onClick={() => setPaused(current => !current)} aria-label={paused ? 'Resume meadow' : 'Pause meadow'} aria-pressed={paused} title={paused ? 'Resume meadow' : 'Pause meadow'}><Icon name={paused ? 'play' : 'pause'} /></button>
+        </div>
       </div>
-      <p id="instructions" className="instructions">Move to brush. Hold to press. <span>Or focus the field and use arrow keys + space.</span></p>
+      <p id="instructions" className="instructions">Move to brush. Hold to {tool === 'foot' ? 'step' : 'press'}. <span>Or focus the field and use arrow keys + space.</span></p>
       {soundError && <p className="sound-error" role="status">Sound couldn’t start. Tap the sound button to try again.</p>}
       <div className="colophon"><span>A small break from the infinite scroll.</span><span>No tokens. No tasks. Just grass.</span></div>
     </footer>

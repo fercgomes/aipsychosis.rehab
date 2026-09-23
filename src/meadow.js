@@ -217,6 +217,7 @@ export function createMeadow(canvas, cursor, settings, onTouch, onError, onBrush
     if (document.hidden) return;
     if (!settings.current.paused) {
       elapsed += dt;
+      hand.tool = settings.current.tool;
       stepGrass(field, hand, dt);
       bend.needsUpdate = true;
       material.uniforms.time.value = elapsed;

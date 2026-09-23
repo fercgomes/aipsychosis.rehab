@@ -18,7 +18,8 @@ export function createField(count, random = Math.random) {
 export function stepGrass(field, hand, delta) {
   const dt = Math.min(Math.max(delta, 0), 1 / 30);
   const { roots, bends, velocity } = field;
-  const radius = hand.pressed ? 1.3 : 0.85;
+  const footprint = hand.tool === 'foot' ? 1.3 : 1;
+  const radius = (hand.pressed ? 1.3 : 0.85) * footprint;
   const sx = hand.x - hand.previousX;
   const sz = hand.z - hand.previousZ;
   const lengthSquared = sx * sx + sz * sz;
@@ -35,7 +36,7 @@ export function stepGrass(field, hand, delta) {
       const distance = Math.hypot(dx, dz);
       if (distance < radius) {
         const influence = (1 - distance / radius) ** 2;
-        const force = (hand.pressed ? 1.35 : 0.9) * influence;
+        const force = (hand.pressed ? 1.35 : 0.9) * influence * footprint;
         targetX = (dx / Math.max(distance, 0.1) + Math.max(-0.7, Math.min(0.7, sx * 3))) * force;
         targetZ = (dz / Math.max(distance, 0.1) + 0.35 + Math.max(-0.7, Math.min(0.7, sz * 3))) * force;
       }

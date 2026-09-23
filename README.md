@@ -11,7 +11,7 @@ npm ci
 npm run dev
 ```
 
-Open the local URL printed by Vite. Move over the grass to brush it; hold the pointer down to press deeper. Touchscreens support dragging. Keyboard users can focus the field, move with the arrow keys, and hold space to press. Escape releases the hand.
+Open the local URL printed by Vite. Choose Hand or Foot beside the meadow controls. Move over the grass to brush it; hold the pointer down to press deeper. The foot bends a wider patch of grass with more weight. Touchscreens support dragging. Keyboard users can select the tool with the radio buttons, focus the field, move with the arrow keys, and hold space to press. Escape releases the cursor.
 
 The controls adjust breeze strength, enable background wind and soft grass-rustling audio, and pause the scene. Turn sound on to hear the background wind, then click or drag through the grass to hear the rustle. Touch presses and keyboard space presses work too. Faster strokes sound slightly stronger, with stereo position following the hand. The rustle fades when movement stops and cuts off gently on release; hovering does not trigger it. The breeze slider adjusts the background wind volume. Muting or pausing fades out both sounds. Reduced-motion preferences disable ambient wind movement. The scene requires WebGL 2 and shows a recovery message if it is unavailable.
 
