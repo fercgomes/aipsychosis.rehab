@@ -1,0 +1,28 @@
+{
+  "name": "aipsychosis-rehab",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "check:deploy": "npm run build && wrangler deploy --dry-run",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "posthog-js": "^1.434.11",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "three": "^0.186.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "vite": "^8.3.0",
+    "wrangler": "^4.137.0"
+  }
+}

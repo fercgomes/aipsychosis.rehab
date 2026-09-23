@@ -1,0 +1,20 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "helvetica",
+        "createdAt": "2026-09-23T18:10:16.509Z",
+        "reason": "Agent design decision: Helvetica is the neutral utility face for compact meadow controls and instructions."
+      },
+      {
+        "rule": "overused-font",
+        "value": "fraunces",
+        "createdAt": "2026-09-23T18:10:16.657Z",
+        "reason": "Agent design decision: softly shaped Fraunces headings support the calm, organic meadow experience; the face is self-hosted."
+      }
+    ]
+  }
+}
